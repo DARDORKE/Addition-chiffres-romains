@@ -11,7 +11,12 @@ function romanToInt($roman) {
             // Si c'est le cas, on utilise la règle de soustraction
             if (($current == 'I' && ($next == 'V' || $next == 'X')) ||
                 ($current == 'X' && ($next == 'L' || $next == 'C')) ||
-                ($current == 'C' && ($next == 'D' || $next == 'M'))) {
+                ($current == 'C' && ($next == 'D' || $next == 'M')) ||
+                ($current == 'I' && $next == 'X') ||
+                ($current == 'X' && $next == 'C') ||
+                ($current == 'C' && $next == 'M') ||
+                ($current == 'X' && $next == 'L') ||
+                ($current == 'I' && $next == 'V')) {
                 $result -= getValue($current);
             } else {
                 $result += getValue($current);
@@ -40,6 +45,18 @@ function getValue($chiffre) {
             return 500;
         case 'M':
             return 1000;
+        case 'CM':
+            return 900;
+        case 'CD':
+            return 400;
+        case 'XC':
+            return 90;
+        case 'XL':
+            return 40;
+        case 'IX':
+            return 9;
+        case 'IV':
+            return 4;
         default:
             return 0;
     }
@@ -48,18 +65,13 @@ function getValue($chiffre) {
 function intToRoman($int) {
     $result = '';
     // Parcourt les chiffres de la notation romaine de haut en bas
-    $chiffres = array('M', 'D', 'C', 'L', 'X', 'V', 'I');
-    $valeurs = array(1000, 500, 100, 50, 10, 5, 1);
+    $chiffres = array('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I');
+    $valeurs = array(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1);
     for ($i = 0; $i < count($chiffres); $i++) {
         // Ajoute le nombre de chiffres nécessaires
         while ($int >= $valeurs[$i]) {
             $result .= $chiffres[$i];
             $int -= $valeurs[$i];
-        }
-        // Vérifie si on peut utiliser la règle de soustraction
-        if ($i % 2 == 0 && $int >= $valeurs[$i] - $valeurs[$i + 2]) {
-            $result .= $chiffres[$i + 2] . $chiffres[$i];
-            $int -= $valeurs[$i] - $valeurs[$i + 2];
         }
     }
     return $result;
